@@ -1,22 +1,23 @@
-import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.Keys;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 
 public class CardDeliveryTest {
-    LocalDate today = LocalDate.now();
-    LocalDate newDate = today.plusDays(3);
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
+   String generateDate(int days) {
+        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+    
     @BeforeEach
     void setUp() {
         open("http://localhost:9999");
@@ -26,13 +27,14 @@ public class CardDeliveryTest {
     public void shouldFullAllFormCorrect() {
 
         $("[data-test-id=city] input").setValue("Тула");
-        $("[data-test-id=date] input").sendKeys(formatter.format(newDate));
+        $("[data-test-id=date] input").setValue(date);
         $("[data-test-id=name] input").setValue("Евдокиомов Павел");
         $("[data-test-id=phone] input").setValue("+79101255555");
         $("[data-test-id=agreement]").click();
         $(".button").click();
         $(withText("Успешно!")).shouldBe(Condition.visible, Duration.ofSeconds(15));
-        $(".notification__content").shouldHave(exactText("Встреча успешно забронирована на " + newDate.format(formatter)));
+        $(".notification__content").shouldHave(exactText("Встреча успешно забронирована на " + date), Duration.ofSeconds(15))
+                .shouldBe(visible);
 
     }
 }
