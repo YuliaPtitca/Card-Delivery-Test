@@ -27,6 +27,7 @@ public class CardDeliveryTest {
     public void shouldFullAllFormCorrect() {
         String date = generateDate(3);
         $("[data-test-id=city] input").setValue("Тула");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("[data-test-id=date] input").setValue(date);
         $("[data-test-id=name] input").setValue("Евдокиомов Павел");
         $("[data-test-id=phone] input").setValue("+79101255555");
